@@ -1,6 +1,6 @@
 # Intro to GaN Device (2023 Fall, Junior Year First Semester)
 
-This repository contains all the assignments and reports completed for the course **"Intro to GaN Device"**, taken in Fall 2023 during the first semester of the junior year. All materials are in English.
+This repository contains all the assignments and reports completed for the course **"Intro to GaN Device"**, taken in Fall 2023 during the first semester of the junior year.
 
 ## Contents
 
