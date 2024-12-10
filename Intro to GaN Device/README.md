@@ -14,6 +14,6 @@ This repository contains all the assignments and reports completed for the cours
      - File: `Pre_Presentation_Slide.pdf`
    - **Final Report on Paper Reading**:
      - Topic: Application of GaN Materials in Lighting.
-     - File: `Final_Report_Paper_Reading.pdf`
+     - File: `Final paper_topic1_12111008_屠耘诚.pdf`
 
 
