@@ -2,23 +2,81 @@
 
 This repository contains the final project and lab materials for the course **"Microprocessor Design"**, taken in Fall 2023 during the first semester of the junior year. The project involves implementing and extending processor architectures, as well as developing features based on ARM and RISC-V ISAs. Detailed project requirements are provided in the `SME309 Final_Project_Requirements_2023.pdf`.
 
-## Project Overview
+## Final Project: Advanced Processor Design
 
-### Final Project
-The final project includes:
-1. **Code**:
-   - Implemented in both RTL and assembly languages.
-   - Covers ARM and RISC-V architectures.
-   - Code files are stored in the `code/` folder.
+The final project for the course **"Microprocessor Design" (2023 Fall)** focuses on implementing and enhancing processor architectures, with detailed requirements for ARM and RISC-V ISAs. This project demonstrates advanced concepts in microprocessor design through pipeline implementation, instruction set expansion, and memory hierarchy integration.
 
-2. **Report**:
-   - A comprehensive report describing the final project implementation, currently in Chinese.
-   - Includes details on processor design and testing.
-   - The report format is flexible but highlights critical hardware design aspects.
-   - File: `Final_Project_Report.pdf`
+**Note**: The final project report is currently written in Chinese with a flexible format. It is available as `Report_Final_Project(Chinese).pdf` in the `Final Project` folder.
 
-3. **Requirements**:
-   - Detailed project guidelines are available in the `Final_Project_Requirement.docx` file located in the `Final Project` folder.
+### Project Components
+
+1. **Five-Stage Pipeline Processor with Hazard Unit** 
+   - **Objective**: Design and implement a five-stage pipeline processor based on the single-cycle processor developed in Lab 2.
+   - **Features**:
+     - Handle data hazards (data forwarding, stall, flush).
+     - Manage control hazards (early branch target address (BTA), flush).
+   - **Validation**:
+     - Develop testbenches and assembly code to verify pipeline functionality using simulation waveforms.
+
+2. **Non-Stalling CPU for Multi-Cycle Instructions** 
+   - **Objective**: Enable the processor to execute subsequent instructions without stalling the pipeline during multi-cycle instruction execution (e.g., `MUL`).
+   - **Features**:
+     - Allow independent instructions without dependencies to proceed.
+     - Introduce pipeline stalls only when data dependencies exist.
+   - **Validation**:
+     - Write and simulate assembly code to verify functionality.
+
+3. **Expand ARM Processor to Support 16 Data Processing Instructions** 
+   - **Objective**: Enhance the ARM processor to include all 16 data processing instructions as described in the ARM Architecture Reference Manual (Section A3.4).
+   - **Features**:
+     - Modify the ALU and ALU decoder in the control unit.
+     - Integrate the `C` flag into the `CondiLogic` and `ALU` modules for additional instructions like `ADC`.
+   - **Validation**:
+     - Simulate new instructions and validate with testbench results.
+
+4. **4-Way Set Associative Cache Integration** 
+   - **Objective**: Implement a 4KB, 4-way set associative cache between memory and the ARM CPU.
+   - **Features**:
+     - Support write-allocate and write-back strategies.
+     - Handle four scenarios:
+       1. Read hit: Load data directly from cache to register.
+       2. Read miss: Load from memory to cache, then to register.
+       3. Write hit: Write to cache and set the block dirty.
+       4. Write miss: Handle dirty block write-back or direct memory write.
+   - **Validation**:
+     - Test with assembly code covering all cache access scenarios.
+
+5. **Floating-Point Unit (FPU)** 
+   - **Objective**: Add an FPU to support basic floating-point instructions (`FADD`, `FMUL`) in the ARM CPU pipeline.
+   - **Features**:
+     - Address floating-point operations.
+     - Handle special cases, such as NaN values.
+   - **Validation**:
+     - Test with custom assembly programs and include design details in the report.
+
+6. **RISC-V ISA Implementation** 
+   - **Objective**: Implement a single-cycle CPU core supporting basic RISC-V instructions from the RV32I extension.
+   - **Features**:
+     - Support integer computation, load/store, and control transfer instructions.
+     - Explore differences between ARM and RISC-V hardware architectures.
+   - **Validation**:
+     - Test with assembly programs for all implemented instructions.
+
+### Bonus Tasks 
+Optional advanced features to improve processor performance:
+   - Dynamic Branch Prediction.
+   - Multiple-Issue (Superscalar) Architecture.
+   - Out-of-Order Execution.
+   - Interrupt and Exception Handling.
+
+### Report Guidelines
+- **Structure**: Flexible, but must clearly detail each task and highlight critical hardware design decisions.
+- **Submission Requirements**:
+  - Well-formatted PDF report (including waveforms and FPGA validation results).
+  - Source code ZIP (RTL files, assembly code, testbenches).
+  - Constraints and other auxiliary files.
+
+
 
 ---
 
@@ -93,15 +151,7 @@ The final project includes:
 - **Expected Outcome**:
   - A fully functional `Mcycle` unit integrated into the processor, successfully handling both `MUL` and the custom division instruction.
 
----
 
-## Additional Notes
-- **Code**:
-  - All source code, testbenches, and configuration files are included in the respective lab folders.
-  - Final project code is organized in the `code/` folder.
 
-- **Documentation**:
-  - The `Final_Project_Requirement.docx` provides detailed guidelines for the final project.
 
-Feel free to explore the repository for reference or learning purposes!
 
