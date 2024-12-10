@@ -8,13 +8,12 @@ This repository contains all the assignments and reports completed for the cours
    - Description: A CAD design report created using SolidWorks.
    - File: `Assignment_Report_SolidWorks.pdf`
 
-2. **Final Project**
-   - **Presentation Slide**: 
+2. **Final Assignment: Paper Reading**
+   - **Pre-Presentation Slide**: 
      - Topic: Application of GaN Materials in Lighting.
-     - File: `Final_Presentation_Slide.pdf`
-   - **Final Report**:
+     - File: `Pre_Presentation_Slide.pdf`
+   - **Final Report on Paper Reading**:
      - Topic: Application of GaN Materials in Lighting.
      - File: `Final_Report_Paper_Reading.pdf`
-
 
 
