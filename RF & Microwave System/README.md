@@ -13,8 +13,8 @@ The project involved the following key steps:
    - Custom-made tea-can antenna
 
 2. **Baseband Circuit Implementation**:
-   - Waveform generator using a microcontroller and DAC
-   - Low-pass filter (LPF)
+   - Waveform generator using a microcontroller(Teensy 4.0) and DAC IC: The programming of Teensy 4.0 is done in the Arduino IDE (integrated development environment)
+   - active low pass filter (LPF) with an adjustable gain
 
 3. **Data Acquisition and Processing**:
    - Data collected using Analog Discovery as an oscilloscope.
@@ -37,6 +37,4 @@ This workflow successfully enabled the detection of both stationary and moving t
 ### Code
 - A folder containing reference code used in the project is included: `reference_code/`
   - This folder includes Python scripts and other implementation details used for data processing, component testing, and radar functionality.
-
-Feel free to explore these materials to understand the design, testing, and functionality of the radar system.
 
