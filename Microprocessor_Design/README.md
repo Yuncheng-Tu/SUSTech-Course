@@ -1,4 +1,4 @@
-# Microprocessor Design (2023 Fall, Junior Year First Semester)
+# 1. Microprocessor Design (2023 Fall, Junior Year First Semester)
 
 This repository contains the final project and lab materials for the course **"Microprocessor Design"**, taken in Fall 2023 during the first semester of the junior year. The project involves implementing and extending processor architectures, as well as developing features based on ARM and RISC-V ISAs. Detailed project requirements are provided in the `SME309 Final_Project_Requirements_2023.pdf`.
 
