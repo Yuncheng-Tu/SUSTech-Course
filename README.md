@@ -1,6 +1,6 @@
 # SUSTech-Course Repository
 
-Welcome to my SUSTech-Course repository! I am currently compiling all the course projects I have completed so far during my undergraduate studies. My major is **Integrated Circuits (IC)**, and this repository serves as a portfolio of my academic work, showcasing projects across various IC-related domains.
+Welcome to my SUSTech-Course repository! I am currently compiling all the course projects I have completed so far during my undergraduate studies. My major is **Microelectronics/IC**, and this repository serves as a portfolio of my academic work, showcasing projects across various IC-related domains.
 
 ---
 
