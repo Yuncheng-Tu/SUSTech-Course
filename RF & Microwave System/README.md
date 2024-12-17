@@ -9,7 +9,6 @@ This repository contains materials from the graduate-level course **"RF & Microw
 These links are references to the original course materials set up by Professor Liu at UC Davis.
 
 ---
----
 
 ## Contents
 
