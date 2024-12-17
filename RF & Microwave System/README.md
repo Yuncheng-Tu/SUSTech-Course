@@ -2,6 +2,13 @@
 
 This repository contains materials from the graduate-level course **"RF & Microwave System"**, taken in Fall 2024 during the first semester of the senior year. The course project focused on the development and testing of a 2.4 GHz frequency-modulated continuous wave (FMCW) radar system.
 
+## Reference Links
+- [Course Introduction](https://music-sustech.github.io/education/sme5029-eec134.html)
+- [Course GitHub Repository](https://github.com/ucdart/UCD-EEC134/)
+
+These links are references to the original course materials set up by Professor Liu at UC Davis.
+
+---
 ---
 
 ## Contents
