@@ -1,0 +1,878 @@
+\documentclass[letterpaper, 11pt]{article}
+
+\usepackage{lastpage, marginnote, siunitx, circuitikz, hyperref, amsmath, pstool, color, xcolor}
+
+%\definecolor{orange}{rgb}{1,0.5,0}
+
+\def\UrlBreaks{\do\/\do-}
+
+%\usepackage[hyphens]{url}
+
+\usepackage{geometry}
+\geometry{hscale=.6, vscale=.8, hmarginratio=2:1, vmarginratio=1:1, marginparwidth=.18\paperwidth, ignoremp}
+%\geometry{marginparwidth=.1\paperwidth}
+
+%\usepackage[T1]{fontenc}
+
+\usepackage[explicit]{titlesec}
+\titlespacing*{\section}{\dimexpr -\marginparsep-\marginparwidth}{*4}{*1}
+\titleformat{\section}[runin]{\large\bfseries\titlerule[.5pt]\filright}{\makebox[1em][c]{\thesection}}{1em}{\parbox[t]{\dimexpr\marginparwidth-2em}{#1}\hskip\marginparsep\mbox{}}[\newline\vspace{-4ex}]
+
+%\titlespacing*{\subsection}{\dimexpr -\marginparsep-\marginparwidth}{*4}{*1}
+%\titleformat{\subsection}[runin]{\large\bfseries\titlerule[.5pt]\filright}{\makebox[1em][c]{\thesection}}{1em}{\parbox[t]{\dimexpr\marginparwidth-2em}{#1}\hskip\marginparsep\mbox{}}[\newline]
+
+\usepackage{enumitem}
+\newlist{steps}{enumerate}{1}
+\setlist[steps]{label=Step \arabic*, font=\bfseries, leftmargin=-\marginparsep, itemindent=\marginparsep, align=right}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhfoffset[lh,lf]{\dimexpr\marginparwidth+\marginparsep}
+\fancyhf[lh]{SUSTech SME5029}
+\fancyhf[ch]{}
+\fancyhf[rh]{}
+%\fancyhf[lf]{left foot}
+%\fancyhf[cf]{centre foot}
+\fancyhf[rf]{Page \thepage /\pageref{LastPage}}
+%\renewcommand{\footrulewidth}{.4pt}
+
+%%%%%%%%%%%%%%%
+%%%% Tikz definitions
+%%%%%%%%%%%%%%%
+%\tikzstyle{Uno}=[rectangle,fill=white,draw,line width=0.5mm]
+
+%new commands
+%display due date in red and link to the eec134-schedule.pdf document
+\newcommand{\due}[1]{\href{https://github.com/ucdart/UCD-EEC134/blob/master/support/schedule/eec134-schedule.pdf}{\textcolor{red}{#1}}}
+
+\graphicspath{{./figures/}}
+
+\begin{document}
+
+\title{Lab 1: Elements of Electronic Systems}
+\author{Instructor: Xiaoguang ``Leo'' Liu\\liuxg@sustech.edu.cn \\
+	\small \href{http://creativecommons.org/licenses/by-sa/4.0/}{CC BY-SA 4.0}}
+%\date{}
+\date{Last updated: \today}
+
+\maketitle
+
+The main objective of this lab is to understand the basic components of a typical electronic system. To this end, we will build a simple electronic system shown in Fig.~\ref{fig:lab1-system}. In this system, we will use a micro-controller and a digital-to-analog converter (DAC) to generate a triangle wave. This triangle wave signal will be low pass filtered and digitized by an analog-to-digital converter (ADC) whose output will be sent to a computer for analysis and display.
+
+Although this system may seem rather useless, it does serve the purpose of introducing the basic concepts and skills in building an embedded system that needs to interface with the analog world. In addition, some of the components in this system will become useful in later labs. 
+
+\begin{figure}[h]
+	\centering
+	\includegraphics{lab1-system}
+	\caption{Lab 1 electronic system.}
+	\label{fig:lab1-system}
+\end{figure}
+
+\section{Objectives}
+
+\begin{enumerate}[itemsep=0.1ex]
+	\item Understand the functionality and characteristics of linear and switching voltage regulators;
+	\item Learn how to use simple micro-controllers, such as the Arduino Uno and the Teensy;
+	\item Learn the functionality and use of DAC and ADC;
+	\item Learn how to use the serial programming interface to control electronic components;
+	\item Learn the basic skills of designing and laying out a printed circuit board (PCB);
+	\item Learn the basic skills PCB assembly involving surface mount (SMD) components.
+\end{enumerate}
+
+%Be warned that this lab is a fairly aggressive one and it will take a lot of time for you and your group to finish all the reading, the pre-lab assignment, the actual lab, and the reports. It's a good idea to start early! And divide up tasks between group members wisely!
+\newpage
+\section{Deliverables}
+All items are to be submitted on Blackboard.  
+
+\vspace{0.5cm}
+
+\begin{table}[h]
+	\footnotesize
+	\caption{Lab 1 Deliverables}
+	\renewcommand{\arraystretch}{1.2}
+	\begin{tabular}{|m{1in}|l|m{0.45in}|m{2in}|}
+		\hline
+		\textbf{Item} & \textbf{Due date} & \textbf{Format} & \textbf{File name format} \\
+		\hline \hline
+		Pre-lab 1.1 & \due{Sep.~7th, 2022} & pdf & ``prelab-1-1-YourName.pdf'' \\
+		\hline
+		Pre-lab 1.2 & \due{Sep.~14th, 2022} & pdf & ``prelab-1-2-YourName.pdf''\\
+		\hline
+		Pre-lab 1.3 & \due{Sep.~21th, 2022} & pdf & ``prelab-1-3-YourName.pdf''\\
+		\hline
+		Lab 1 report & \due{Sep.~28th, 2020 } & pdf & ``lab-1-GroupName.pdf''\\
+		\hline
+		Lab 1 PCB design \& review reports & \due{Oct.~12th, 2022} & pdf & ``pcb-1-report-GroupName.pdf''\\
+		\hline
+		Lab 1 PCB gerber files & \due{Oct.~12th, 2022} & zip & ``pcb-1-design-GroupName.zip''\\
+		\hline
+		Lab 1 PCB test report & \due{Nov.~16th, 2022} & pdf & ``pcb-1-test-GroupName.pdf''\\
+		\hline
+	\end{tabular}s
+	\label{tab:deliverables}
+\end{table}
+
+\textbf{Notes:}
+\begin{enumerate}
+	\item All items are due by 11:59PM of the due date. No late submissions are accepted.
+	
+	\item Please follow the file name format rigorously. Replace ``GroupName'' with your group's name and ``YourName'' with your name, first name first, last name last. 
+\end{enumerate}
+
+\newpage
+\section{Prelab}
+\subsection{Micro-controllers}
+Micro-controllers are computing systems integrated within a single package. Compared with general purpose computers, micro-controllers find widespread use in applications where low-power consumption, small physical size, low cost, and predictable response time are required. 
+
+Traditionally, programming a micro-controller was an art that only well-trained electrical engineers can perform. This all changed with the invention of the Arduino micro-controller platform in 2005 by a group of Italian educators who were frustrated with how difficult it was to learn and use microcontrollers. They decided to develop a hardware and software platform so easy to use that even artists were able to use them. In addition, the Arduino platform is completely open source. Because of this, there has been a large number of library and add-on boards (called ``Shields'') developed and made available by the community, making it possible to build complex systems without having to reinvent the wheels. The huge popularity of the Arduino platform has motivated the development of numerous similar platforms with a wide spectrum of capabilities. These are the reasons that we choose to use Arduino compatible micro-controllers in this class\footnote{If you have experience using a microcontroller different than the Arduinos, you should feel free to use that platform to implement this lab; obviously you may want to make sure that you have a consensus within your group.}. We hope that even students who are not interested in embedded systems will be able to master how to use them in a relatively short amount of time. 
+
+Although the focus of the SME5029 class is on high frequency systems, you will find micro-controllers indispensable whenever you need to control a component electronically.  
+
+\begin{itemize}[itemsep=0.1ex]
+	\item To get a quick introduction to the Arduino platform, watch Episodes 1--10 of Jeremy Blum’s ``\href{https://www.youtube.com/playlist?list=PLA567CE235D39FA84}{Tutorial Series for Arduino} ''. It is advised that you, or your group collectively, go through all of the videos in this list. 	\url{https://www.youtube.com/playlist?list=PLA567CE235D39FA84}
+	
+	%\item Go through Appendix A: A Teensy Primer
+\end{itemize}
+
+
+\subsection{Voltage regulator}
+In the late 1880s, a heated battle over the best mechanism to transport electricity over long distance broke out between proponents of direct current (primarily Thomas Edison) and alternating current (primarily George Westinghouse and several European companies). History eventually settled on ac current as the preferred method for long distance distribution because of its ability to be easily transformed into high voltages to reduce resistive loss along the wires. So today we all have ac outlets at home and in the lab. However, most if not all the circuits we have studied in our curriculum are powered from dc supplies. Have you ever wondered how dc voltages are generated from an ac supply? The following videos may be instructive. Make sure you watch them carefully. 
+
+\begin{itemize}[itemsep=0.1ex]
+	\item How to build an AC-DC power supply:\\ \url{https://www.youtube.com/watch?v=cyhzpFqXwdA} 
+	\item Linear voltage regulator:\\ \url{https://www.youtube.com/watch?v=GSzVs7_aW-Y}
+	\item Adjustable linear voltage regulator:\\  \url{https://www.youtube.com/watch?v=IjJWWGPjc-w}
+	\item Switch-mode voltage regulator:\\ \url{https://www.youtube.com/watch?v=CEhBN5_fO5o}
+\end{itemize}
+
+\subsection{Digital to Analog Converter (DAC) and Analog to Digital Converter (ADC)}
+
+DAC and ADC are the interface between the analog and the digital world. A DAC takes digital inputs (``1''s and ``0''s) and converts them into an analog signal. An ADC does just the inverse of that, converting an analog signal into a digital one. A simple DAC can be built with only resistors, such as the R-2R ladder shown in Fig.~\ref{fig:dac-adc}-a. A simple ADC is not much more complex using a linear resistor ladder integrated with comparator and decoders (Fig.~\ref{fig:dac-adc}-b)\footnote{A variety of other architectures exist for both DACs and ADCs with respective advantages and disadvantages.}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics{dac-adc}
+	\caption{(a) R-2R ladder DAC. (b) ADC using a linear string of resistors.}
+	\label{fig:dac-adc}
+\end{figure}
+
+
+To learn more about DACs and ADCs, watch the following video and read the following documents. 
+
+\begin{itemize}[itemsep=0.1ex]
+	
+	\item humanHardDrive, ``Electronics 201 -- Analog/Digital Conversion,''\\ \url{https://www.youtube.com/watch?v=cjmcAE1L6OQ}
+	\item Bill McCulley, ``\href{https://github.com/ucdart/UCD-EEC134/blob/c58efc438dba2679658333c34c4a6f733f594b39/labs/lab1/references/%5BMcCulley2010%5D.DAC.Introduction.pdf}{Bridging the divide: Part I - DAC Introduction}\footnote{Following the link  will lead you to EEC134's repository on Github. If you want the actual PDF file, you can clone the entire repository to your harddrive. The file is under the foler /labs/lab1/references/.},'' National Semicondcutor, 2010
+	\item Chris Pearson, ``\href{https://github.com/ucdart/UCD-EEC134/blob/e977e88aaaf67f53cd562d2a071746a38ea19aa3/labs/lab1/references/%5BPearson2012%5D.High.Speed.Analog.to.Digital.Converters.Basics.pdf}{High Speed, Digital to Analog Converters Basics},'' Texas Instruments, 2012.
+	\item Mike Kester, ``\href{http://www.analog.com/media/en/training-seminars/tutorials/MT-019.pdf}{DAC Interface Fundamentals},'' Analog Devices, 2008.
+	\item Chris Pearson,  ``\href{https://github.com/ucdart/UCD-EEC134/blob/da59c17c776faf159aaea506ebd87510907dc133/labs/lab1/references/%5BPearson2011%5D.High-Speed.Analog-to-Digital.Converter.Basics.pdf}{High-Speed, Analog-to-Digital Converters Basics},'' Texas Instruments, 2011.
+\end{itemize}
+
+\subsection{Serial interface}
+
+For micro-controllers that don't have built-in DACs and/or ADCs, an external DAC/ADC IC needs to be used when conversion between analog and digital is required. Even micro-controllers with on-chip DAC/ADC may run into situations where more conversion channels are needed. When using an external device, a digital interface for transmitting and receiving data is needed between the micro-controller and the device. 
+
+Digital interface generally comes in two flavors: \textit{parallel} and \textit{serial}. In a parallel interface, each physical pin corresponds to one digital bit. For example, an 8-bit word would need 8 physical pins for transmission/reception. In a serial interface, the digital bits are transmitted/received sequentially in time and theoretically only two pins are needed (one for signal and one for ground). Depending on whether a clock is needed to time the transmission/reception of digital bits, serial interface can be further categorized into \textit{synchronous} and \textit{asynchronous}. For synchronous transmission, an additional pin for the clock signal would be needed.
+
+Obviously, at the same physical bit rate\footnote{how often the voltage changes from logic $1$ to $0$ (or the other way) on a pin.}, a parallel interface is much faster than a serial one. But the serial interface requires far less pins and therefore a smaller chip footprint and lower PCB routing complexity, both of which translates to lower cost!. Therefore, for medium to high rate (kp/s to a few Gp/s) data transmission, serial links are more popular.
+
+In this class, we use synchronous serial interface, in particular the Serial Peripheral Interface (SPI) protocol, as the interface between micro-controllers and external devices, such as DACs, ADCs, and some other electronically controllable RF components. 
+
+To learn more about the SPI interface, read the following documents:
+\begin{itemize}[itemsep=0.1ex]
+	\item Mike Grusin, ``\href{https://learn.sparkfun.com/tutorials/serial-peripheral-interface-spi}{Serial Peripheral Interface (SPI)},'' Sparkfun. \url{https://learn.sparkfun.com/tutorials/serial-peripheral-interface-spi}
+	\item F.~Leens, ``\href{http://www.byteparadigm.com/applications/introduction-to-i2c-and-spi-protocols/}{Introduction to I²C and SPI protocols},'' Byte Paradigm, 2009. \url{http://www.byteparadigm.com/applications/introduction-to-i2c-and-spi-protocols/}
+\end{itemize}
+
+\subsection{Printed circuit board design}
+A major goal of this lab is to help you get familiar with printed circuit board (PCB) design techniques. For those of you who have never designed a PCB before, the following materials are helpful for you to get familiar with some basic concepts. 
+
+\begin{itemize}[itemsep=0.1ex]
+
+	\item PCB Basics from Sparkfun:	 \url{https://learn.sparkfun.com/tutorials/pcb-basics} 
+	
+	\item \href{https://github.com/ucdart/UCD-EEC134/blob/master/labs/lab1/references/%5BJones2009%5D.PCB.Design.Tutorial.pdf}{PCB design tutorial from Dave Jones}, available in the ``references'' folder.
+		
+\end{itemize}
+
+There are numerous PCB design software packages available on the market. In this quarter, you will start with a simple tool called KiCad. Once you are familiar with the basic concepts, it is easier to transition to a more sophisticated tool, such as the Cadence Allegro which is made available to us by a donation from Cadence. 
+
+KiCad is an open-source electronic design software with very good PCB layout capabilities. KiCAD is becoming more popular in the hobbyist electronics community because it doesn't have any restrictions on the number of layers or boards sizes, nor does it lock you down to a particular PCB manufacturer.
+
+To learn how to use KiCad and design PCBs in general, please go through the following materials.
+
+\begin{itemize}[itemsep=0.1ex]
+
+	\item Video tutorials from Digi-Key:	 \url{https://youtube.com/playlist?list=PL3bNyZYHcRSUhUXUt51W6nKvxx2ORvUQB} 
+	
+%	\item Video tutorials form  Yoonseo Kang:	 \url{http://vimeo.com/user9565582} 
+%
+%	\item A simple KiCad example: 
+%	
+%		\url{http://exploreembedded.com/wiki/A_simple_example_for_beginners:_LED_Breakout} 
+	
+%	\item SME 5029 A Tutorial on PCB Design
+		
+\end{itemize}
+
+Also installed on the lab computers is a more sophisticated PCB design tool, Cadence Allegro PCB Designer. Allegro has a steep learning curve and is not recommended for this lab. But it is quite powerful if you are interested in implementing more complex systems (including the RF circuitry) on PCB as part of your quarter 2 project. Allegro is widely used in the  industry; knowing how to use it may also give you some advantage in job hunting. The following links provide some tutorials on Allegro. 
+
+\begin{itemize}[itemsep=0.1ex]
+	\item \url{https://www.youtube.com/watch?v=oGfvVkD_3lU}	
+	\item \url{http://www.referencedesigner.com/tutorials/allegro/allegro_page_1.php}
+	\item \url{http://userweb.eng.gla.ac.uk/john.davies/orcad/pcbdesigner.pdf}
+	\item \url{http://www.csee.umbc.edu/~cpatel2/links/310/projects/capture_cis.pdf} and \\ \url{http://www.csee.umbc.edu/~cpatel2/links/310/projects/LayoutTutorialNew.pdf}
+\end{itemize}
+
+
+\subsubsection{PCB assembly}
+Please carefully watch the following tutorial videos on soldering and assembly. 
+\begin{itemize}
+	\item Soldering tutorials from EEvblog:
+		\begin{itemize}
+			\item \url{http://www.youtube.com/watch?v=J5Sb21qbpEQ}
+			\item \url{http://www.youtube.com/watch?v=fYz5nIHH0iY}
+			\item \url{http://www.youtube.com/watch?v=b9FC9fAlfQE}
+			\item \url{http://www.youtube.com/watch?v=qyDRHI4YeMI}
+		\end{itemize}
+	\item Drag soldering SMD parts with a flux pen: \url{https://www.youtube.com/watch?v=PUFCDh9BxQU}
+	
+	\item Using stencils and reflow ovens for soldering SMD parts:
+		\begin{itemize}
+			\item \url{https://www.sparkfun.com/tutorials/58}
+			\item \url{http://www.youtube.com/watch?v=PzTA83WSNoo}
+			\item \url{http://www.youtube.com/watch?v=xqv9HF_2GlY } 
+		\end{itemize}
+	 \item Direct hand soldering:
+		 \begin{itemize}
+			 \item \url{http://www.youtube.com/watch?v=3NN7UGWYmBY}
+			 \item \url{http://www.youtube.com/watch?v=5uiroWBkdFY}
+			 \item \url{http://www.youtube.com/watch?v=HRzPI6acg84}
+		 \end{itemize}
+\end{itemize}
+
+
+\reversemarginpar
+\marginnote{\textbf{Pre-lab Assignment}\\\textbf{ 1.1} }  Please answer the following questions:
+\begin{enumerate}[itemsep=0.1ex, label=\alph*)]
+	\item What are the advantages and disadvantages of using switch mode voltage regulator vs a linear voltage regulator?
+	\item For the circuit of Fig.~\ref{fig:lm317_prelab}, with an input voltage of 9V and R1=\SI{510}{\ohm}, what's the value of R2 such that the output voltage is 5\,V? What is the efficiency of the regulator in this case? ``LM317'' refers to the Texas Instruments LM317 voltage regulator IC. You should be able to find its datasheet online. 
+	
+	\begin{figure}[h]
+	\centering
+		\begin{circuitikz}[scale=0.75]
+				\centering	
+				\draw (0,0) to [short,o-] (1,0)
+				(1,-0.5) rectangle (3,0.5)
+				(3,0) to (3.5,0) to [R, l=$R_1$] (3.5,-2) to (2,-2)
+				(2,-0.5) to (2,-2) to [R, l=$R_2$] (2,-4) node [sground]{}
+				(3.5,0) to [short, -o] (4,0)
+				(-1,0)	node []{input}
+				(5,0) node []{output}
+				(2,0) node []{LM317}
+				;
+			\end{circuitikz}
+		\caption{LM317 linear regulator circuit.}
+		\label{fig:lm317_prelab}
+	\end{figure}
+	
+	\item According to the datasheet you found above, what is the typical drop out voltage for the TI LM317? If an input voltage of 12\,V is used, what range of output voltage can be considered regulated? 
+	\item What is the maximum efficiency of the TI LM2694 switch mode voltage regulator for an output voltage of 5\,V? Under what conditions is this efficiency achieved? 
+	
+	\item What do \textit{LSB} and \textit{MSB} mean in a DAC? For a 12-bit DAC with an output reference voltage $V_{ref}$ of 2\,V, how much voltage does an LSB correspond to? What about a 24-bit DAC instead?
+
+\end{enumerate}
+
+\reversemarginpar
+\marginnote{\textbf{Pre-lab Assignment}\\\textbf{ 1.2} }  Please answer the following questions:
+\begin{enumerate}[itemsep=0.1ex, label=\alph*)]
+	
+	\item What does \textit{SFDR} mean for a DAC? What is the typical SFDR of the Analog Devices (ADI) AD9788 DAC? 
+
+	\item What is the \textit{image} signal for a DAC output? If a DAC is operating at a clock rate of 200\,Msps and the output fundamental signal is a 50\,MHz sine wave, what are the frequencies of the first three images above the fundamental? 
+	
+	\item What does \textit{SNR} mean for a DAC? What is the typical SNR for the Linear Technology (Linear) LTC2641 DAC?
+	
+	\item What does \textit{THD} mean for an ADC? What is the typical THD for the TI ADS5400 ADC ?
+	
+	\item What does \textit{SINAD} mean for an ADC? What is the typical SINAD for the Linear LTM9008-14 ADC? 
+	
+	\item What does \textit{ENOB} mean for an ADC? How is it calculated? What is the ENOB for the Maxim Integrated (Maxim) MAX11270 ADC?
+	
+\end{enumerate}
+
+\reversemarginpar
+\marginnote{\textbf{Pre-lab Assignment}\\\textbf{ 1.3} }  Please answer the following questions:
+\begin{enumerate}[itemsep=0.1ex, label=\alph*)]
+	
+	\item What is the highest sampling rate 8-bit ADC you can find? What is its power consumption? What would be the power consumption of an 8-bit ADC with half of this speed?
+
+	\item What is the frequency domain representation of the triangle wave signal shown in Fig.~\ref{fig:prelab132}?
+%	\[
+%		x(t)=\sum_{k=-\infty}^\infty \left\{ \left(\frac{2t}{T}-\frac{kT}{2}\right)\Pi\left[\frac{2(t-k)}{T}\right] + \left(1-\frac{2t}{T}\right)\Pi\left[\frac{2(t-k-\frac{1}{2})}{T}\right] \right\},
+%	\]
+%	where $\Pi(t)$ is the rectangular pulse function
+%	\[
+%		\Pi(t) = \begin{cases}
+%					1 & 0\leq t \leq 1; \\
+%					0 & \text{elsewhere}. \\
+%				\end{cases}
+%	\]
+		\begin{figure}[h]
+			\centering
+			\includegraphics{prelab13b}
+			\caption{Signal of Pre-lab problem 1.3.b.}
+			\label{fig:prelab132}
+		\end{figure}
+		
+	If we pass the signal through an ideal low-pass filter that keeps only the first three harmonics (including the fundamental, the 2nd harmonic, and the 3rd harmonic), what would the filter output signal look like in the time domain?
+
+	\item Design an analog low-pass filter that meets the following specifications: 
+		\begin{enumerate}
+			\item In-band gain: 10\,dB;
+			\item 3-dB cut-off frequency: 20\,kHz;
+			\item Attenuation at 100\,kHz: 30\,dB.
+		\end{enumerate}
+	You may find online filter design tools, such as the TI \href{http://www.ti.com/lsds/ti/analog/webench/webench-filters.page}{WEBENCH Filter Designer\footnote{A short introduction video is available at \url{https://www.youtube.com/watch?v=bdtLbtfTV8A}}} and the ADI \href{http://www.analog.com/designtools/en/filterwizard/}{Filter Wizard}, to be useful. Verify the performance of your filter by simulation. You may use a SPICE simulator, such as \href{http://www.linear.com/designtools/software/}{LTSpice}, or a high frequency circuit simulator such as Agilent/Keysight Analog Design Systems (ADS). Both software are available on lab computers. 
+	
+\end{enumerate}
+
+\newpage
+\section{Equipment \& \\Supplies}
+
+\begin{itemize}[itemsep=0.5ex]
+\item 1 $\times$ bench power supply.
+\item 1 $\times$ bench oscilloscope.
+\item 1 $\times$ bench signal generator.
+\item 1 $\times$ bench multimeter.
+\item 1 $\times$ Texas Instruments breadboard.	
+\item 1 $\times$ box of breadboard jumper wires.
+%\item 1 $\times$ MB102 breadboard power supply module.	
+%	\begin{figure}[h]
+%		\centering
+%		\includegraphics[width=2.5in]{breadboard-pic}
+%		\caption{MB102 breadboard with the power supply module mounted.}
+%		\label{fig:breadboard-pic}
+%	\end{figure}
+%\item 1 $\times$ \num{50000}\,mAh USB battery pack.
+%	\begin{figure}[h]
+%		\centering
+%		\includegraphics[width=2.5in]{battery-pic}
+%		\caption{\num{50000}\,mAh USB battery pack with charging cable.}
+%		\label{fig:battery-pic}
+%	\end{figure}
+\item 1 $\times$ Teensy 4.0 development board.	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=2.5in]{teensy-pic}
+		\caption{Teensy 4.0 micro-controller (mounted on the edge of a breadboard).}
+		\label{fig:teensy}
+	\end{figure}
+\item 1 $\times$ LM317 IC. 
+\item 1 $\times$ 8-DIP MCP4921 DAC IC.
+\item 1 $\times$ LT1009 precision reference IC.
+\item 1 $\times$ 14-DIP TL974IN quad Op-Amp IC.
+\item misc resistors. Provided by the TA.
+\item misc capacitors. Provided by the TA. 
+\item 1 $\times$ 2k potentiometer
+\item 1 $\times$ 20k potentiometer.
+\item 1 $\times$ small screwdriver.
+\item 1 $\times$ Analog Discovery.
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=2in]{analog_discovery.png}
+		\caption{Analog Discovery.}
+		\label{fig:ad}
+	\end{figure}
+\end{itemize}
+
+\newpage
+\section{Procedures}
+
+\subsection{Power supply/voltage regulator}
+\label{sec:lm317}
+
+%We will use a USB battery pack to power up our system. 
+
+Batteries provide the cleanest (i.e. very little noise) type of supply but with one major disadvantage, their voltage keeps dropping due to increased internal resistance under discharge. A voltage regulator is therefore often used to provide a relatively stable dc voltage supply.
+
+In our first design, we will build an adjustable voltage regulator that can be used to provide the supply voltage for several parts in our system. The regulator is based on the LM317, a linear voltage regulator IC (Fig.~\ref{fig:lm317}).
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1in]{lm317}
+	\caption{Pin out of the LM317 IC.}
+	\label{fig:lm317}
+\end{figure}
+
+A linear regulator provides very stable and clean voltage output but it can only provide regulated output voltage lower than the primary voltage source. Another disadvantage of a linear regulator is its low efficiency when the difference between the input and output voltages is large. Because the same amount of current flows through the regulator and the load, the power being dissipated is roughly
+
+\begin{equation}
+	P_d=I_\mathrm{load} \times \left( V_\mathrm{in}-V_\mathrm{out}\right).
+\end{equation}
+
+When the load current is high, this power dissipation can be significant. It is therefore important to provide good heat sinking to the regulator IC. In fact, many regulator ICs, such as the LM317, have large exposed metal pad with low thermal resistance to facilitate mounting a heat sink.  However, it is very important to note that the metal pad on some regulator ICs, such as the LM317, is connected electrically to the output of the IC. If the heat sink may potentially come in contact with any other part of the circuit (including the enclosure, which often is tied to ground), proper isolation is needed between the IC and the heat sink. 
+%
+%When choosing a linear voltage regulator, several important specifications should be considered:
+%\begin{itemize}[itemsep=0.5ex]
+%	\item \textbf{Output voltage range}: the amount of ;
+%	\item Maximum output current;
+%	\item Drop-out voltage: this is the smallest voltage difference between the input and the output voltage before the output is no longer regulated. Having a low drop-out voltage is often advantageous;
+%	\item Load regulation: the change in output voltage for a given change in load current;
+%	\item Line regulation: the change in output voltage for a given input voltage change. 
+%\end{itemize}
+
+\begin{enumerate}
+\item Using Fig.~\ref{fig:lm317-sch} as a reference, build the regulator circuit on the breadboard. You should be able to find the LM317 pinout diagram from its datasheet, which you find from online. \emph{As a general suggestion, it is important to keep your circuit well laid out and keep the connecting wires as short as possible. Cut the wires to the right length if necessary.} Fig.~\ref{fig:lm317-pic} shows an example breadboard layout for the LM317 regulator circuit in this lab. 
+
+	\begin{figure}[h]
+	\centering
+		\begin{circuitikz}[scale=1]
+				\centering	
+				\draw (-2,0) node [above]{$V_{in}$} to [short,o-] (1,0)
+				(-1,0) to [C, l=$C_i${=}\SI{0.1}{\micro\farad}] (-1,-2) node [sground]{}
+				(1,-0.5) rectangle (3,0.5)
+				(1.4,0.1) node [scale=0.75]{V$_{\text{IN}}$}
+				(2,0.75) node []{LM317}
+				(2.55,0.1) node [scale=0.75]{V$_{\text{OUT}}$}
+				(2,-0.3) node [scale=0.75]{ADJ}
+				(3,0) to (3.5,0) to [R, l=$R_1${=}\SI{220}{\ohm}] (3.5,-2) to (2,-2)
+				(2,-0.5) to (2,-2) to [vR, l=$R_2: \text{2K potentiometer}$] (2,-4) node [sground]{}
+				(3.5,0) to [short, -o] (7,0) node [above]{$V_{out}$}
+				(6,0) to [C, l=$C_o${=}\SI{1}{\micro\farad}] (6,-2) node [sground]{}
+				;
+			\end{circuitikz}
+		\caption{Schematic of the voltage regulator circuit using LM317.}
+		\label{fig:lm317-sch}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics{lm317-pic}	
+		\caption{An example breadboard layout of the circuit in Fig.~\ref{fig:lm317-sch}.}
+		\label{fig:lm317-pic}
+	\end{figure}
+
+
+\item For testing the circuit, we will first use the lab bench power supply as our input power. Set the power supply voltage to 8\,V and connect it to the input of your voltage regulator circuit. Adjust the $R_2$ potentiometer until the output voltage is 5\,V. You can use the lab multimeter to measure the output voltage. 
+
+\item Line regulation: 
+	\begin{enumerate}
+		\item Adjust the input voltage from 8\,V to 5\,V at 0.25\,V intervals, and then from 5\,V to 2\,V at 0.5\,V intervals, record the regulator output voltage using the multimeter; 
+		\item Plot your results. In what input voltage range does the LM317 provide good line regulation? 
+	\end{enumerate}
+	
+% load regulation:
+
+\end{enumerate}
+
+%\textbf{Note:} The above experiment is meant to teach you the basics of voltage regulation. From this point on, you may use the power supply module (Fig.~\ref{fig:breadboard-pic}) together with the battery pack (Fig.~\ref{fig:battery-pic}) to provide regulated power. The power supply module takes input power from either the adapter port or the USB port. It produces two regulated output, one around 5\,V and the other around 3\,V, through two linear regulators. A push button switch is available to turn on and off the power output. If you are not using the power supply module, it is recommended that you put the jumpers to the off position. 
+
+\subsection{Precision voltage reference}
+\label{sec:lt1009}
+
+In order to present a precise and stable reference for the DAC and the ADC, we will build a precision voltage reference circuit. In this circuit, we will use the TI LT1009 reference IC with $2.5$\,V output voltage and less than $\pm$ 0.2\% initial accuracy (no calibration and adjustment). The LT1009 IC can be used as a two-terminal voltage reference although it does provide an optional 3rd terminal for $\pm 5$\% adjustment.
+
+\begin{enumerate}
+	\item Build circuit shown in Fig.~\ref{fig:lt1009-sch} on your breadboard. Here, we use one of the op-amps in the TI TL974IN quad op-amp IC as a voltage follower (buffer) to provide sufficient current drive capability. A pinout diagram of TL974IN is shown in Fig.~\ref{fig:tl974-pinout}. 
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=1]{lt1009.pdf}
+		\caption{Schematic of the LT1009 precision voltage reference circuit.}
+		\label{fig:lt1009-sch}
+	\end{figure}
+
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=1.5in]{tl974-pinout}
+		\caption{Pinout diagram of the TL974 Op-Amp.}
+		\label{fig:tl974-pinout}
+	\end{figure}
+
+%	\begin{figure}[h]
+%	\centering
+%		\begin{circuitikz}[scale=0.75]
+%				\centering	
+%				\draw (0,0) node[ground] {} to [full Zener diode, l=LT1009] (0,2) to [R,l=\SI{3.6}{\kilo \ohm}] (0,4) to (0,4.5) node[above]{5\,V}
+%				(0,2) to [short,*-o] (2,2) node[right]{$V_{REF}$}
+%				;
+%			\end{circuitikz}
+%		\caption{Schematic of the LT1009 precision voltage reference circuit.}
+%		\label{fig:lt1009-sch}
+%	\end{figure}
+	
+	\item Verify that the output voltage of the circuit is 2.5\,V.
+\end{enumerate}
+
+\subsection{Function generator}
+\label{sec:func-generator}
+
+There are numerous ways to build a function generator. You can use a 555 timer, a ring of inverters, dedicated oscillator ICs, or a direct digital synthesis (DDS) circuit which uses high-speed digital circuits to implement fast waveform generators. It does so by outputting values from a look-up table (LUT), which stores the desired waveform in discretized values, and converting them to an analog signal by a DAC. 
+
+In this lab, we will try to emulate a DDS using a micro-controller and a DAC IC. We are interested in generating a triangle wave which will be useful in later labs. Since DAC outputs are discrete in nature, we are really just approximating the triangle wave with a stair-case waveform (Fig.~\ref{fig:triangle-wave}). Obviously, the higher the resolution of the DAC, the better this approximate is. 
+
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=4in]{triangle-wave}
+		\caption{Triangle wave and its approximation by a stair-case waveform which more closely resembles the output of a DAC.}
+		\label{fig:triangle-wave}
+	\end{figure}
+
+For this class, we will use the \textit{Teensy 4.0} micro-controller. The Teensy 4.0 is developed by Paul J.~Stoffregen of \href{https://www.pjrc.com}{PJRC.com}. The programming of Teensy 4.0 is done in the same IDE as the Arduino platform\footnote{with an add-on called Teensyduino, which has already been installed on the lab computer} and most Arduino programs will run without any problem on the Teensy. Compared to most Arduinos, however, the Teensy 4.0 has a much faster micro-controller chip (ARM Cortex M7 running at $600$\,MHz) with floating point support and is therefore a much better platform than Arduinos when some number crunching is needed. 
+
+The DAC IC we are going to use is the \href{http://www.microchip.com/wwwproducts/Devices.aspx?product=MCP4921}{Microchip MCP4921 12-bit DAC}. Fig.~\ref{fig:mcp4921}a shows the pin out of the IC. The MCP uses SPI interface for digital input. The output voltage is related to the digital code input by
+\[
+	V_\mathrm{OUT} = \frac{V_\mathrm{REF} \times D_n}{2^{12}} \times G,
+\]
+where $V_\mathrm{REF}$ is the reference voltage, $D_n$ is the digital code, and $G$ is a gain setting. $G$ can be set by one of the register bits and can take value of either 1 or 2. 
+
+
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=4in]{mcp4921}
+		\caption{(a) Pinout diagram and (b) Block diagram of the MCP4921 DAC.}
+		\label{fig:mcp4921}
+	\end{figure}
+
+\begin{enumerate}
+	\item Using Fig.~\ref{fig:dac-sch}-a as a reference, connect the Teensy to the MCP4921 DAC. Connect the MCP4921's VDD pin to the output of the LM317 regulator (5\,V). Connect the MCP4921's VREF pin to the LT1009 reference's output (2.5\,V). Connect both AVSS and $\overline{\text{LDAC}}$ of the MCP4921 to ground. A \SI{0.1}{\micro\farad} and a \SI{1}{\micro\farad} capacitor could be used at VREF to minimize noise at the reference. It is very important to keep your circuit (ICs, resistors, capacitors, wires, etc) organized. Use as short of a wire as possible between two connection points. Refer to Fig.~\ref{fig:dac-sch}-b for an example layout.
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics{dac-sch}
+		\caption{Schematic of the connection between the Teensy and the MCP4921.}
+		\label{fig:dac-sch}
+	\end{figure}
+
+\item Once the circuit is built, open the Arduino IDE, create a new sketch, and input the code \href{https://github.com/ucdart/UCD-EEC134/blob/master/labs/lab1/code/triangle_teensy_mcp4921/triangle_teensy_mcp4921.ino}{``triangle\_teensy\_mcp4921.ino''} . \textbf{Make sure you read through and understand the code.} You may also want to read the datesheet of MCP4921 to understand its SPI control protocol. 
+
+\item Connect the Teensy with the computer using a USB cable, which is used to power up and program the Teensy.
+
+\item Compile and upload the code to the Teensy. Use the following settings under the ``Tools'' menu: 
+	\begin{enumerate}
+		\item Board: ``Teensy 4.0''
+		\item USB Type: ``Serial''
+%		\item CPU Speed: ``144\,MHz Optimized (Overclocked)''
+		\item Port: Select the COM port that the Teensy is connected to. 
+	\end{enumerate}
+
+\item In your report, include a screen capture of both the triangle (at VOUT) and sync (at SYNC) output signals on the oscilloscope. Record their amplitudes and periods.
+
+\item Modify your code to set the triangle wave amplitude to $2.5$\,V. Hint: change the gain setting of the MCP4921. 
+
+\item How can you modify the code to change the amplitude and period of the output waveform? What is the fastest triangle wave you could generate? What do you think is the limitation to going even faster?
+
+\item Modify the code to generate a sinusoidal wave. What is the highest frequency sinusoidal wave you can generate? The following link may give you some hint. 
+\url{http://interface.khm.de/index.php/lab/experiments/arduino-dds-sinewave-generator/} 
+
+%\item \textbf{(Challenge!)} Research and propose a design that will allow you to generate a 100\,kHz triangle and/or sine wave. (Hint: look-up table)
+
+\item The Teensy actually has a built-in DAC. Try to implement the triangle wave generator using the built-in DAC. Refer to \url{https://www.pjrc.com/teensy/teensy40.html} for some hint. What is the fastest triangle wave you can generate?
+
+\item Use code \href{https://github.com/ucdart/UCD-EEC134/blob/master/labs/lab1/code/triangle_teensy_audio/triangle_teensy_audio.ino}{``triangle\_teensy\_audio.ino''} to generate a 4\,kHz sine wave using Teensy's built in DAC. The code makes use of the \href{http://www.pjrc.com/teensy/td_libs_Audio.html}{Teensy Audio library}. You should dig into the \href{https://github.com/PaulStoffregen/Audio}{source code}, in particular the \href{https://github.com/PaulStoffregen/Audio/blob/master/synth_waveform.cpp}{``synth\_waveform.cpp''} file, of the audio library to understand how it works. 
+\end{enumerate}
+
+\subsection{Active low-pass filter}
+\label{sec:lpf}
+
+In this part of the lab, we will implement an active low pass filter (LPF) with an adjustable gain. In the final radar system, the active LPF will be responsible for filtering out spurious signals and amplifying the desired received baseband radar signals. We will use the TI TL974IN quad Op-Amp for both the gain stage and the active LPF. 
+
+Fig.~\ref{fig:lpf-sch} shows the schematic of the active LPF circuit. The filter has a cut-off frequency of \textbf{15\,kHz} and was designed with the TI WEBENCH filter design tool.  
+
+%Fig.~\ref{fig:lpf_pic} shows an example of the actual circuit on a breadboard. 
+
+
+%It also filters out any spurious signals above a certain threshold frequency (15\,kHz in this design). To get the maximum resolution from the digitizer, the maximum strength of the signal should be less than the allowed input voltage range of the digitizer. 
+
+%In our simple radar system, we are going to use the soundcard of the PC as the digitizer. The amplified and filtered IF signal is fed to the right channel of an audio card, which is conventionally connected using the red wire of a 3.5\,mm stereo jack or the ring of the connector (Fig. 6.10.3). 
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=5.3in]{lpf-sch}
+	\caption{Schematic of the active low-pass filter. Underlined resistors values are 1\% tolerance.}
+	\label{fig:lpf-sch}
+\end{figure}
+
+\subsubsection{Gain stage}
+%TODO: rewrite this section: have a separate diagram for each experiment. Add a series capacitor in from of the LPF for testing. 
+%TODO: add a paragraph on debugging
+\begin{enumerate}
+
+	\item Identify the gain stage (between point 1 and point 2 Fig.~\ref{fig:lpf-sch}). What is the expression of its gain? Notice that the +2.5\,V supply does not affect this result, rather it simply sets the bias of the overall amplifier for maximum output swing because a single 5\,V supply (battery) is used vs a dual-rail (both positive and negative) supply.
+	
+	\item Build the gain stage on your breadboard. 
+		\begin{enumerate}
+			\item Power the op-amp chip by using 5\,V for VDD and ground for VSS. %You may use the LM317 regulator or the USB battery  pack to provide the 5\,V. It's a good idea to disconnect and turn off the battery pack when measurement is not being made.
+			
+			\item You can use the 2.5\,V LT1009 reference as the bias for the input and output. 
+			
+			\item The gain is controlled using a 20\,k\si{\ohm} potentiometer (pot). The pot can be tricky to use when you don't know where exactly the tap is. Measuring and adjusting the pot to a desired starting point before you put it on the breadboard will make your life much easier. For example, you can start with \SI{880}{\ohm} which will give you a voltage gain of 5 to start with. 
+			
+			\item Use caution when handling the TL974 Op-Amp. As with all ICs, it is sensitive to electrostatic discharge, high voltage, and high current. Before you apply power to the circuit, \textit{always double check} that 
+				\begin{itemize}
+					\item the supply voltages is set up correctly;
+					\item the bias voltage is set up correctly;
+					\item the load is not shorted or connected to too low of an impedance.
+				\end{itemize}
+			We have limited supplies of these ICs, so if you end up destroying yours, your lab progress may be delayed significantly. 
+		\end{enumerate}
+
+	\item To test the circuit, generate a $1$\,kHz $100$\,mVpp sine wave signal using the lab signal generator and connect the signal to the input of the gain stage circuit. Measure the output of the circuit using the lab oscilloscope. What is the maximum peak-to-peak voltage at the output before clipping occurs? What is the gain at this point?
+	
+	\item Adjust the potentiometer to have an output voltage swing of $3$\,Vpp for the same input as in the above step. 
+	Tabulate and plot the gain from $100$\,Hz to $1$\,MHz while keeping the pot fixed. Find the $3$\,dB cutoff frequency or the $3$\,dB bandwidth at this gain. Use at least 20 data points. What is the gain-bandwidth (GBW) product of the gain stage? 
+	
+	\item (Optional) \textbf{Digitally-controlled Variable Gain Amplifier (VGA)}. In previous steps, the gain of the amplifier can be varied by adjusting the potentiometer by hand. In many applications, however, dynamic adjustment of the amplifier gain in the field (i.e. after the circuit is integrated in a system and deployed) is needed. To this end, a digitally-controlled potentiometer may be used. In this optional lab, we use the MCP4251 IC to make a digitally-controlled variable gain amplifier (VGA).
+	
+	The MCP4251 is a dual digital potentiometer with an SPI control interface. Fig.~\ref{fig:mcp4251} show a photo and a pin-out diagram of the MCP4251 IC. In this lab, we use the 50-k\si{\ohm} version. 
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=3.5in]{mcp4251}
+		\caption{(a) A photo and (b) pin-out diagram of the MCP4251 IC.}
+		\label{fig:mcp4251}
+	\end{figure}
+
+	Construct a variable gain amplifier as shown in Fig.~\ref{fig：vga}. Write a program on the Teensy or Arduino Uno to control the two MCP4251 digital potentiometers (P1 \& P2). Demonstrate that the gain of the amplifier can be changed. What is the maximum gain you can achieve? 
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=3.5in]{vga}
+		\caption{Schematic of the digitally-controlled variable gain amplifier. }
+		\label{fig:vga}
+	\end{figure}
+	
+%The audio card on a typical laptop is designed to take in line level signals. Notice that this limits the sound card input signal strength to approximately 3\,Vpp. Adjust the pot to achieve 3\,Vpp on the oscilloscope at 1 kHz. 
+
+\end{enumerate}
+
+\subsubsection{Active LPF}
+\begin{enumerate}
+	\item Identify the active LPF portion of the circuit (between point 2 and point 3 in Fig.~\ref{fig:lpf-sch}). The overall filter consists of 2 low pass filters. What is the order of the overall filter and how is it determined from the schematic?
+	
+	\item Build the LPF circuit on your breadboard. 
+	
+	%TODO: add decoupling capacitor at both the input and output of this circuit. 
+	\item To measure the filter response only, input a 3\,Vpp signal through a series 1\,\si{\micro\farad} capacitor at point 2 in Fig.~\ref{fig:lpf-sch} and measure the output through R14 (at point 3 in Fig.~\ref{fig:lpf-sch}). Tabulate and plot the frequency response from 100\,Hz to 150\,kHz. What is the cutoff frequency of the filter?
+	
+	\item How would one increase or decrease the cutoff frequency?
+	
+\end{enumerate}
+
+%R14 will only be needed as a current limiting resistor when connecting the amplifier to the laptop’s audio card. 
+
+
+\subsubsection{Gain Stage + Filter}
+\begin{enumerate}
+	\item Reconnect R4 (R14 is still disconnected) and measure the overall response of the gain stage + active LPF. Use a 100\,mVpp sine wave as the input. 
+	
+	\item Adjust the pot for a $3$\,Vpp output at $1$\,kHz. Measure the frequency response from $100$\,Hz to 150\,kHz and record the result. What is the 3\,dB cutoff frequency? Compare the results to previous measurements. Plot all of the results for the report.
+
+\end{enumerate}
+
+
+\subsection{Acquiring and analyzing analog signals}
+\label{sec:adc}
+%
+%Acquiring and analyzing analog signals are common tasks in any embedded system that needs to interact with the real world. It is particularly so for high frequency wireless systems because they are usually used for transmitting and receiving information. 
+%
+%An analog-to-digital converter is the main interface device for acquiring analog signals. However, designing a high quality sampling system with high speed ADCs involves some serious engineering at many different levels and is well beyond what we can cover in a quarter; in fact the topic can probably become a lab course of its own. 
+%
+%In this lab, we will cut some corners and use sampling sub-systems that have already been implemented for us. The first and mandatory option is to use the computer sound card. High quality sound cards are actually extremely precise (up to 32-bit) sampling systems working at audio sampling rate (up to 192\,ksps). Even low-end ones will usually give 16-bit resolution.
+%
+%So in Experiment~\ref{sec:soundcard}, we will use the computer sound card to sample the filtered signal from the function generator we built in previous experiments. A program written in the Python programming language will be used to collect the data and perform a frequency analysis. 
+%
+%\subsubsection{Using Analog Discovery}
+%\label{sec:soundcard}
+
+The Analog Discovery is a USB-powered electronic measurement instrument. It combines the functionalities of an oscilloscope, a logic analyzer (sampling and analyzing digital signals), a function generator, and a dc power supply in a very small form factor. You should read the Analog Discovery 2's reference manual for more information: \url{https://digilent.com/reference/test-and-measurement/analog-discovery-2/reference-manual}.
+\begin{enumerate}
+	\item Set up the system according to Fig.~\ref{fig:audio-1}.
+	\begin{figure}[h]
+		\centering
+		\includegraphics{audio-1.pdf}
+		\caption{Acquiring signal through Analog Discovery.}
+		\label{fig:audio-1}
+	\end{figure}
+	
+	\item Program the Teensy with \href{https://github.com/ucdart/UCD-EEC134/blob/master/labs/lab1/code/triangle_teensy_audio/triangle_teensy_audio.ino}{``triangle\_teensy\_audio''}. 
+	
+	\item Verify that the output of the LPF does not exceed $3$\,Vpp. 	
+	
+	\item Connect the output of the LPF to the ``1+'' pin of the Analog Discovery. Connect the ground reference of the LPF to the ``Ground'' pin. A pin out diagram of the Analog Discovery is shown in Fig.~\ref{fig:ad_pinout}. 
+	
+	\item Connect the Analog Discovery 2 to your computer using the USB cable. 
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=3.5in]{ad_pinout}
+		\caption{Pin out diagram of the Analog Discovery}
+		\label{fig:ad_pinout}
+	\end{figure}
+	
+%	\item Plug the audio cable into the m/icrophone port of the computer. Some computers have a built-in noise reduction mechanism and may treat the sinusoidal signal as noise and shut off the microphone. You can turn off this the noise reduction option from the audio settings of the computer.  
+	\item Open the WaveForm software. Open a "Scope" window to display the measured signal. It should look like the following. 
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=3.5in]{waveforms_triangle.jpg}
+			\caption{Using the Analog Discovery as an oscilloscope. Shown in the measurement is a $50$\,Hz triangle wave.}
+			\label{fig:waveforms_triangle}
+		\end{figure}
+	
+	\item Open a "Spectrum" window to display the spectrum of the measured signal. It should look like the following. 
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=3.5in]{waveforms_spectrum.jpg}
+			\caption{Using the Analog Discovery as a spectrum analyzer. Shown in the measurement is the frequency spectrum of the $50$\,Hz triangle wave.}
+			\label{fig:waveforms_spectrum}
+		\end{figure}	
+	
+	\item For the Scope mode, you can save the acquired data by going to "File - Save Acquisition". For the Spectrum mode, you can save the data by going to "File - Export". Save the acquired time-domain waveforms and the frequency domain spectrum for point 1 and 2 in Fig.\,\ref{fig:audio-1}.
+	
+	\item {\bf(Optional)} Now that you are somewhat familiar with the Analog Discovery 2 and the Waveforms software, you can try replacing the lab equipment (oscilloscope, power supply, and multimeter) with the Analog Discovery 2 in the previous experiments in this lab. Even if you choose not to do this step, you should still be aware that from now on, you don't have to rely using the lab and the lab equipment to perform your experiments. 
+
+	\item {\bf (Optional: acquiring and processing data using Python)} On you computer, run the python program \href{https://github.com/ucdart/UCD-EEC134/blob/master/labs/lab1/code/realtime_audio_analysis.py}{``realtime\_ad\_analysis.py''}. The program is well documented and you should try to understand it thoroughly. 
+	\begin{enumerate}
+		\item The simplest way to do this is to install the Anaconda distribution.
+		 
+		\item You can run the program from the Spyder IDE that comes with the Anaconda Python distribution. If you do so, make sure that you run the program under the Python console rather than the default IPython console. You could also run the program from the command line by ``python~realtime\_ad\_analysis.py''. You should expect to see a new window popping up that displays the sampled input signal and its frequency spectrum in real time (Fig.~\ref{fig:audio-capture-ad}). 
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=3.5in]{audio-capture-ad.png}
+			\caption{Screen capture of the real-time signal capture program.}
+			\label{fig:audio-capture-ad}
+		\end{figure}
+		
+		\item To record the data, you can either modify the Python code to save the raw data, or do a screen capture. Obviously, the former gives you more accurate result. 
+	\end{enumerate}
+	
+\end{enumerate}
+
+
+%\subsubsection{Using the computer sound card}
+%\label{sec:soundcard}
+%
+%\begin{enumerate}
+%	\item Set up the system according to Fig.~\ref{fig:audio-1}.
+%		\begin{figure}[h]
+%		%	\centering
+%			\pstool{audio-1.eps}{
+%				\psfrag{figlm317}{\textcolor{orange}{\textbf{Fig.~\ref{fig:lm317-sch}}}}
+%				\psfrag{figlt1009}{\textcolor{orange}{\textbf{Fig.~\ref{fig:lt1009-sch}}}}
+%				\psfrag{figlpf}{\textcolor{orange}{\textbf{Fig.~\ref{fig:lpf-sch}}}}
+%				}
+%			\caption{Acquiring signal through computer sound card.}
+%			\label{fig:audio-1}
+%		\end{figure}
+%
+%	\item Program the Teensy with \href{https://github.com/ucdart/UCD-EEC134/blob/master/labs/lab1/code/triangle_teensy_audio/triangle_teensy_audio.ino}{``triangle\_teensy\_audio''}. 
+%	
+%	\item Verify that the output of the LPF does not exceed 3\,Vpp. 	
+%
+%	\item Connect the output of the LPF to the red wire of the audio cable. Connect the ground reference of the LPF to the black wire of the audio cable. 
+%	
+%	\item Plug the audio cable into the microphone port of the computer. Some computers have a built-in noise reduction mechanisms and may treat the sinusoidal signal as noise and shut off the microphone. You can turn off this the noise reduction option from the audio settings of the computer.  
+%	
+%	\item On the computer, run the python program \href{https://github.com/ucdart/UCD-EEC134/blob/master/labs/lab1/code/realtime_audio_analysis.py}{``realtime\_audio\_analysis.py''}. The program is well documented and you should try to understand it thoroughly. Record the data. 
+%		\begin{enumerate}
+%			\item If you are using the lab computer, you can run the program from the Spyder IDE that comes with the Anaconda Python distribution. If you do so, make sure that you run the program under the Python console rather than the IPython console. You could also run the program from the command line by ``python~realtime\_audio\_analysis.py''. You should expect to see a new window popping up that displays the sampled input signal and its frequency spectrum in real time (Fig.~\ref{fig:audio-capture-sound-card}). 
+%				\begin{figure}[h]
+%					\centering
+%					\includegraphics[width=3.5in]{audio-capture-sound-card.png}
+%					\caption{Screen capture of the microphone signal capture program.}
+%					\label{fig:audio-capture-sound-card}
+%				\end{figure}
+%				
+%			\item If you want to run the program on your computer, you should have Python 2.7 installed. The simplest way to do this is to install the Anaconda 2.7 distribution. You will also need to install the \textit{PyAudio} and \textit{PySerial} packages. 
+%			
+%			\item To record the data, you can either modify the Python code to save the raw data, or do a screen capture. Obviously, the former gives you more accurate result. 
+%		\end{enumerate}
+%	
+%	\item Now use the audio cable to acquire the signal after the gain stage (position 2 in Fig.~\ref{fig:audio-1}). Record the data and compare it with that from the last step. Explain the difference, if there is any. 
+%\end{enumerate}
+%
+%\subsubsection{(Optional) Using the Teensy's built-in ADC}
+%\label{sec:teensy-sa}
+%
+%A second option is to use the Teensy 3.2's built-in ADC module. Fortunate for us, the Teensy 3.2 comes with libraries for directly getting samples from the ADC. In this experiment, we will also be performing signal analysis on the Teensy directly. To display the result, we will use a simple 128$\times$160 LCD display. You can request the display from the TA. 
+%
+%\begin{enumerate}
+%	\item Set up the system according to Fig.~\ref{fig:audio-2}a.
+%			\begin{figure}[hp]
+%				\centering
+%				\includegraphics{audio-2}
+%				\caption{Acquiring, processing, and displaying the signal all within Teensy. (a) Schematic. (b) An example breadboard layout.}
+%				\label{fig:audio-2}
+%			\end{figure}
+%			
+%	\item Program the Teensy with \href{https://github.com/ucdart/UCD-EEC134/blob/master/labs/lab1/code/sa_teensy/sa_teensy.ino}{``sa\_teensy.ino''}. The code generates a 4\,kHz triangle wave through the built-in DAC using the Teensy audio library,  acquires analog signal input through pin A15, performs a fast Fourier Transform (FFT) to get the signal's spectrum, and displays it on the LCD. In essence, we've built a very simple signal generator and a spectrum analyzer for audio frequencies. The code is well documented and you should try to understand it thoroughly. 
+%	
+%	\item Observe the display on the LCD screen and compare it with the result of Experiment~\ref{sec:soundcard}.
+%	
+%	\item Obviously this spectrum analyzer is rather primitive. There aren't any magnitude or frequency labels, nor can you place markers or cursors for accurate reading. Try to implement more features. Send in a \href{https://help.github.com/articles/using-pull-requests/}{pull request} through Github if you feel that your code is worth sharing with future students. 
+%	
+%\end{enumerate}
+
+%Reconnect R14. Break the audio cable and connect the LPF output to the right channel and the SYNC signal (from the modulator) to the left channel. 
+	
+\newpage
+\section{PCB Design}
+
+Design a PCB incorporating the circuits of Fig.~\ref{fig:lm317-sch}, \ref{fig:lt1009-sch}, \ref{fig:dac-sch}, and \ref{fig:lpf-sch}. 
+\vspace{0.8cm}
+We will add a resistive attenuator circuit just so that the output does not easily saturate. Fig.~\ref{fig:pcb-block} shows a high level block diagram of the PCB.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics{pcb-block}
+	\caption{Block diagram of the PCB design.}
+	\label{fig:pcb-block}
+\end{figure}
+
+
+Follow the guidelines below when designing your PCB. 
+\begin{enumerate}
+	\item We will use JLC PCB as our PCB manufacturer. The design constraints can be found on their website (https://jlcpcb.com/capabilities/pcb-capabilities).
+	
+	\item Use 0603 (imperial) surface mount (SMD) components for all the resistors and capacitors. The potentiometer will remain the same through hole package as you used in the lab. 
+	
+	\item The only input to the PCB should be the power supply terminals (VCC and GND). 0.1''-spacing female pin headers (e.g. \url{http://www.digikey.com/product-detail/en/961102-6404-AR/3M9447-ND/2071488}) or testpoints (e.g. \url{http://www.digikey.com/product-detail/en/5001/5001K-ND/255327}) should be used to provide connection to the power input, ground, and signal output. 
+	
+	\item As a \textbf{Challenge}, you may also provide on-the-fly waveform selection by using a set of switches or jumpers. If you choose to do the challenge, you need to review your design with the TA before you submit it.
+	
+	\item For mounting the Teensy board and the MCP4921 IC, we will use pin-headers that you can get from the TA. This shouldn't change the way you design the IC footprint. 
+	
+	\item The design should fit in an area of 2$\times$2\,in$^2$, even if you choose to do the challenge.
+	
+	\item The following items are due by \due{Oct.~12th, 2022}. Refer to Table.~\ref{tab:deliverables} for submission instructions. 
+		\begin{itemize}
+			\item A PCB design report to the TA. The design report should include the following:
+				\begin{itemize}
+					\item Bill of materials. Make sure to check the \href{https://docs.google.com/spreadsheets/d/1GJnBLUymuVzXjrK0Zkdbc2lwTbw0z9a0JR4bLLzO-Sw/edit#gid=4}{class inventory} for components that are already available from the TA. You need to be responsible for securing any components not in the inventory. 
+					\item Screen capture of the schematic.
+					\item Screen capture of the PCB layout.
+					\item Bay Area Circuit design for manufacturing (DFM) report from showing no errors. This link (\url{http://bayareacircuits.com/common-problems-with-gerber-files/}) gives some troubling shooting guidelines for fixing common errors. 
+				\end{itemize}
+			\item A PCB review report to the TA. The review report should be completed by a different team than yours. You will be responsible for finding this review team. The review report should follow the general guideline of the PCB Review Report Template.
+
+			\item PCB output (Gerber) files.
+		\end{itemize}
+
+	\item After the PCB comes back, you will need to assemble the circuit and test it. The tests would be similar to what you have done in Measurement~\ref{sec:lm317}--\ref{sec:adc}. Test report for this PCB is due by \due{Nov.~16th, 2022}.
+\end{enumerate}
+
+
+%\begin{thebibliography}{9}
+%
+%\bibitem{lamport94}
+%  Leslie Lamport,
+%  \emph{\LaTeX: a document preparation system},
+%  Addison Wesley, Massachusetts,
+%  2nd edition,
+%  1994.
+%
+%\end{thebibliography}
+
+\end{document}
