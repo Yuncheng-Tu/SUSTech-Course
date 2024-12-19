@@ -20,8 +20,8 @@ This repository includes several reports written in a formal, IEEE conference-st
 ### **2. Digital IC Projects**
 For projects in the **Digital IC domain**, this repository contains:
 - **Microprocessor Design**: 
-  - A final project involving both **ARM** and **RISC-V** ISA.
-  - Includes source code (RTL files, assembly code, testbenches) and documentation for key tasks such as **pipeline implementation**, instruction set expansion, and multi-cycle operation handling.
+  - A final project involves a CPU supporting both **ARM** and **RISC-V** ISA.
+  - Includes source code (RTL files, assembly code, testbenches) and documentation for key tasks such as **a five-stage pipeline processor with Hazard Unit**, **Floating-point Unit**,**instruction set expansion**, and **multi-cycle operation handling**.
 - **Tetris Game**:
   - A fully functional Tetris game developed in **Verilog**.
   - Implemented on **FPGA** with **VGA output** for display and **real-time controls** for gameplay.
