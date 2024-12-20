@@ -22,6 +22,9 @@ For projects in the **Digital IC domain**, this repository contains:
 - **Microprocessor Design**: 
   - A final project involves a CPU supporting both **ARM** and **RISC-V** ISA.
   - Includes source code (RTL files, assembly code, testbenches) and documentation for key tasks such as **five-stage pipeline processor with Hazard Unit**, **Floating-point Unit**,**instruction set expansion**, and **multi-cycle operation handling**.
+ <img width="1099" alt="c71dd8a54ef477b3919d1b10ab179b3" src="https://github.com/user-attachments/assets/21f79c2d-548e-4621-9ca0-a639f2b45176" />
+
+    
 - **Tetris Game**:
   - A fully functional Tetris game developed in **Verilog**.
   - Implemented on **FPGA** with **VGA output** for display and **real-time controls** for gameplay.
