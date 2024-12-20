@@ -1,4 +1,5 @@
-![image](https://github.com/user-attachments/assets/9a653d00-bde6-4a88-9b0c-a89a6a2043a5)
+<img width="1099" alt="c71dd8a54ef477b3919d1b10ab179b3" src="https://github.com/user-attachments/assets/b4d4690f-c923-4bd3-90e1-ea4f495d783d" />
+
 # 1. Microprocessor Design (2023 Fall, Junior Year First Semester)
 
 This repository contains the final project and lab materials for the course **"Microprocessor Design"**, taken in Fall 2023 during the first semester of the junior year. The project involves implementing and extending processor architectures, as well as developing features based on ARM and RISC-V ISAs. Detailed project requirements are provided in the `SME309 Final_Project_Requirements_2023.pdf`.
