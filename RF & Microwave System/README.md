@@ -1,3 +1,5 @@
+![e262bdd1ac6785945441cd012db8f71](https://github.com/user-attachments/assets/0d6dd000-e09b-4480-8ab6-059bf75c59b0)
+
 # RF & Microwave System (2024 Fall, Senior Year First Semester)
 
 This repository contains materials from the graduate-level course **"RF & Microwave System"**, taken in Fall 2024 during the first semester of the senior year. The course project focused on the development and testing of a 2.4 GHz frequency-modulated continuous wave (FMCW) radar system.
