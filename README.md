@@ -17,6 +17,24 @@ This repository includes several reports written in a formal, IEEE conference-st
 
 ---
 
+## Directions
+### **1. RF/Analog IC**
+This section showcases my work in RF and analog IC design, focusing on both theoretical foundations and practical implementations.
+
+- **CMOS Analog IC Folder**:
+  - Includes the design of a Two-Stage Differential CMOS Operational Amplifier using 0.18µm CMOS technology. This design balances performance metrics such as gain, bandwidth, and power consumption, while addressing stability across PVT variations.
+  
+- **RF & Microwave System Folder**:
+  - Covers the design and testing of a 2.4 GHz FMCW Radar system, with key tasks such as RF component characterization, baseband circuit implementation, and radar data processing.
+
+- **Advanced Microwave Circuit Folder**:
+  - Highlights advanced microwave system designs, including:
+    1. **Broadband Equal Wilkinson Power Divider Design**:
+       - Designed a multi-stage Wilkinson power divider (1–3 GHz) on Rogers RT/duroid 5880 using ADS, with performance metrics including insertion loss <3.5 dB, return loss >15 dB, and isolation >15 dB&#8203;:contentReference[oaicite:0]{index=0}.
+    2. **Broadband Balanced Low Noise Amplifier Design**:
+       - Designed a wideband balanced LNA (1.6–2.4 GHz) with a gain >12 dB, noise figure <0.85, and return loss >20 dB, leveraging constant noise figure and gain circle principles on Rogers RT/duroid 4003C&#8203;:contentReference[oaicite:1]{index=1}.
+
+---
 ### **2. Digital IC Projects**
 For projects in the **Digital IC domain**, this repository contains:
 - **Microprocessor Design**: 
