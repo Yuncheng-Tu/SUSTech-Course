@@ -22,10 +22,25 @@ This repository includes several reports written in a formal, IEEE conference-st
 This section showcases my work in RF and analog IC design, focusing on both theoretical foundations and practical implementations.
 
 - **CMOS Analog IC Folder**:
+- Highlights CMOS Analog Integrated Circuit Design, simulated using **Cadence Virtuoso**, including:
   - Includes the design of a Two-Stage Differential CMOS Operational Amplifier using 0.18µm CMOS technology. This design balances performance metrics such as gain, bandwidth, and power consumption, while addressing stability across PVT variations.
-  
+  - The design process was guided by theoretical knowledge from **"Design of Analog CMOS Integrated Circuits" by Behzad Razavi**
 - **RF & Microwave System Folder**:
-  - Covers the design and testing of a 2.4 GHz FMCW Radar system, with key tasks such as RF component characterization, baseband circuit implementation, and radar data processing.
+  - **Project Overview**: This folder includes the design and testing of a 2.4 GHz **Frequency Modulated Continuous Wave (FMCW)** radar system, highlighting key tasks such as RF component characterization, baseband circuit implementation, and radar data processing.
+
+  - **Course Description**: 
+    - The concepts introduced are exemplified through a hands-on project that involves the design and implementation of an FMCW radar system capable of performing range, Doppler, and Synthetic Aperture Radar (SAR) measurements. 
+    - In the first half of the course, students build an FMCW radar system using off-the-shelf components. In the second half, they either improve the system by implementing their own designs or utilize it for specific applications, such as speed limit enforcement or remote vital sign detection.
+    - The course integrates multiple aspects of electrical engineering, including system design, antenna design, analog circuit design, embedded systems, and digital signal processing, aiming to equip students with a better understanding of engineering principles and practical skills.
+
+  - **Tools and Software Used**:
+    - **Arduino IDE with Teensyduino**: For programming and configuring the Teensy microcontroller in the radar system.
+    - **WaveForms**: A virtual instrument graphical user interface software used with Analog Discovery for data acquisition and analysis.
+    - **Anaconda**: A Python suite utilized for data processing and machine learning applications.
+    - **TPI Synth and Driver**: Software for controlling TPI RF synthesizers, providing precise frequency generation.
+    - **KiCAD**: PCB design software used for circuit layout and design.
+
+
 
 - **Advanced Microwave Circuit Folder**:
   - Highlights advanced microwave circuits designs, simulated using **Keysight ADS**, including:
