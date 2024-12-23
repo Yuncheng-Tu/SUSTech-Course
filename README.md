@@ -23,8 +23,8 @@ This section showcases my work in RF and analog IC design, focusing on both theo
 
 - **CMOS Analog IC Folder**:
    - Highlights CMOS Analog Integrated Circuit Design, simulated using **Cadence Virtuoso**, including:
-    - The design of a Two-Stage Differential CMOS Operational Amplifier using 0.18µm CMOS technology. This design balances performance metrics such as gain, bandwidth, and power consumption, while addressing stability across PVT variations.
-    - The design process was guided by theoretical knowledge from **"Design of Analog CMOS Integrated Circuits" by Behzad Razavi**
+      - The design of a Two-Stage Differential CMOS Operational Amplifier using 0.18µm CMOS technology. This design balances performance metrics such as gain, bandwidth, and power consumption, while addressing stability across PVT variations.
+      - The design process was guided by theoretical knowledge from **"Design of Analog CMOS Integrated Circuits" by Behzad Razavi**
 - **RF & Microwave System Folder**:
   - **Project Overview**: This folder includes the design and testing of a 2.4 GHz **Frequency Modulated Continuous Wave (FMCW)** radar system, highlighting key tasks such as RF component characterization, baseband circuit implementation, and radar data processing.
 
