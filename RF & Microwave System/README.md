@@ -1,4 +1,5 @@
 ![e262bdd1ac6785945441cd012db8f71](https://github.com/user-attachments/assets/0d6dd000-e09b-4480-8ab6-059bf75c59b0)
+![image](https://github.com/user-attachments/assets/2cf2e30a-955e-40f1-b7b9-f0e41387a699)
 
 # RF & Microwave System (2024 Fall, Senior Year First Semester)
 
@@ -21,7 +22,7 @@ To make the reports more accessible, I have consolidated IEEE conference-style f
   - **Lab3_Report.pdf**: Voltage Controlled Oscillators
   - **Lab4_Report.pdf**: Characterization of RF Mixers
   - **Lab5_Report.pdf**: Antenna Design
-  - **Lab6_Report.pdf**: Assembly of the Radar System
+  - **Lab6_Report.pdf**: Final report. Assembly and testing of the Radar System
 
 ---
 
